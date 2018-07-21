@@ -1,0 +1,325 @@
+# Básica introdução ao R 
+
+## Atribuição de variável
+
+```{r}
+# Hadley prefere atribuições utilizando ceta <-  
+a <- 42
+b = 21
+11.5 -> c
+```
+
+## Variáveis de ambiente
+```{r}
+# Para verificar suas variáveis de ambiente
+ls()
+
+# Se quiser remover alguma espefica
+rm(b)
+
+# Se quiser remover todas
+rm(list=ls())
+
+```
+
+
+## Tipos primitivos
+
+```{r}
+l <- FALSE 
+n <- 3.1415
+i <- 64L
+cc <- 'programming'
+
+# Para verificar os tipos
+class(l)
+class(n)
+class(i)
+class(cc)
+
+```
+
+## Vetores
+
+```{r}
+l <- c(FALSE,FALSE,TRUE,FALSE)
+n <- c(12.333,12.389,12.918, 13, 14.021)
+cc <- c('programming','r','python')
+
+# Para verificar o tamanho
+length(l)
+length(n)
+length(cc)
+
+# Para criar vetores vazios
+v <- vector(length = 10,mode = "numeric")
+length(v)
+
+# Para criar vetores mistos
+m1 <- c('R','is','Easy',FALSE)
+m3 <- c('programming',3000,'lines')
+
+```
+
+## Dataframe
+
+```{r}
+meu_df <- data.frame(nome = c("Hajime", "Naruto", "Midorya", "Ed"),
+                     funcao = c("pugilista", "Ninja", "Estudante", "Alquimista"),
+                     idade = c(17, 12, 15, 16))
+
+# Para acessar os atributos do dataframe
+meu_df$nome
+meu_df$funcao
+meu_df$idade
+
+```
+
+## Funções básica do R base
+
+```{r}
+  ## Utilizando funções básicas
+  
+  # Média das idades
+  mean(meu_df$idade)
+  
+  # A idade máxima dos personagens
+  max(meu_df$idade)
+  
+  # A idade mínima 
+  min(meu_df$idade)
+  
+```
+
+## Estruturas de repetição em R 
+
+```{r}
+  # Laço simples 
+  for(i in meu_df$funcao){
+    print(i)
+  }
+  
+  # Laço simple porém um pouco mais rápido
+  for(i in seq_along(meu_df$funcao)){
+    print(meu_df$funcao[i])
+  }
+  
+  # Laço utilizando programação funcional
+  sapply(meu_df$funcao, print)
+
+```
+
+
+## Estruturas de decisão de em R
+Lembrando que os índices em R começam em 1
+```{r} 
+  # Verificação utilizando a primeira linha
+
+  if (meu_df$nome[1] == "Hajime"){
+    print("Melhor anime!")
+  } else {
+    print("Da pra assistir!")
+  }
+  
+  # Podemos utilizar também o ifelse
+
+  ifelse(meu_df$nome[1] == "Hajime", "Melhor anime!", "Da pra assisir")
+```
+
+## Criando funções em R
+```{r}
+  
+  # Função para converter milhas em quilômetros
+  conversor_mi_km <- function(mi){
+    distance_km <- mi*1.60934
+    return(distance_km)
+  }
+  
+  # Função para converter quilômetros em milhas
+  conversor_km_mi <- function(km){
+    distance_mi <- km*0.621371
+    return(distance_mi)
+  }
+  
+  # Usando as funções
+  conversor_mi_km(10)
+  
+```
+
+## Hora de juntarmos tudo
+```{r}
+  # Primeiro vamos usar outro dataframe
+  data(mtcars)
+  
+  # Vamos verificar nossas colunas e entender o data.frame
+  colnames(mtcars)
+  
+  # [, 1] 	mpg 	Miles/(US) gallon
+  # [, 2] 	cyl 	Number of cylinders
+  # [, 3] 	disp 	Displacement (cu.in.)
+  # [, 4] 	hp 	Gross horsepower
+  # [, 5] 	drat 	Rear axle ratio
+  # [, 6] 	wt 	Weight (1000 lbs)
+  # [, 7] 	qsec 	1/4 mile time
+  # [, 8] 	vs 	Engine (0 = V-shaped, 1 = straight)
+  # [, 9] 	am 	Transmission (0 = automatic, 1 = manual)
+  # [,10] 	gear 	Number of forward gears
+  # [,11] 	carb 	Number of carburetors
+  
+  # Podemos observar que a coluna 'mpg' está em milhas, vamos converter para Km
+  
+  # Utilizando o base para fazer 
+  for (i in seq_along(mtcars$mpg)){
+    mtcars$mpg[i] <- conversor_mi_km(mtcars$mpg[i])
+  }
+  
+  # Que tal utilizarmos função de programação funcional?
+  
+  # Bem mais bonito e simples, não?
+  mtcars$mpg <- sapply(mtcars$mpg, conversor_mi_km)
+  
+  # Vamos arredondar os quilometros utilizando a função round
+  round(mtcars$mpg)
+  
+  # Desafio
+  
+  
+  # A coluna wt está em libras (1000 lbs), tente converter para quilos utilizando o mesmo principio, se sentir dificuldade, pode usar o comando ?funcao, e.g. ?max
+  
+  # A solução do desafio está abaixo mas tente fazê-lo :D
+
+```
+
+
+## Visualização de dados
+
+```{r, fig.height=6, fig.width=7, fig.align="center"}
+library(ggplot2)
+  # Histograma
+ggplot(mtcars, aes(x=mpg)) +
+  geom_histogram(binwidth = 2)
+
+  # Grafico de linhas 
+
+
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_line() +
+  ggtitle(label = "mtcars", subtitle = "Peso em relação ao gasto") +
+  xlab("Km/galão") +
+  ylab("Kg")
+  
+
+```
+
+
+
+
+
+## Solucões dos desafios 
+Desafio da conversão libras para quilos, lembrando que está em escala milhar
+```{r}
+  # Sabendo que a 1 libra equivale a 0,45 quilos, vamos fazer a conversão
+  conversor_li_kg <- function(li){
+    massa_kg <- li*0.453592
+    return(massa_kg)
+  }
+
+  # Convertendo cada linha
+  mtcars$wt <- sapply(mtcars$wt,conversor_li_kg)
+  
+  round(mtcars$wt, 3)
+```
+
+
+
+# Leitura e análise de dados utilizando o pacote tidyverse
+
+### Tidyverse é um pacote em R que encapsula os diversos pacotes voltados para ciência de dados, grosso modo um framework?
+
+- ggplot2 - Pacote voltado para visualização de dados
+- tibble - 
+- tidyr - Pacote voltado para 
+- readr - Pacote voltado para leitura de dados
+- purrr - Pacote voltado para progração funcional
+- dplyr - Pacote voltado para manipulação de dados
+
+### Leitura de dados com R
+
+```R
+# Lembre-se de especificar o diretório do arquivo (e.g. setwd('~/downloads'))
+# Para verificar seu diretório atual use o comando getwd()
+# Para verificar os arquivos do seu diretório atual use dir (".") ou list.files()
+
+# Lendo o conjunto de dados utilizando o R base
+meu_dataframe <- read.csv ('./stateData.csv')
+
+# Utilizando o pacote tidyverse
+library("tidyverse") # ou
+library("readr")
+
+meu_dataframe <- read_csv2 ('./stateData.csv')
+
+```
+
+### Após o carregamento do dado, é interesante verificá-lo
+
+```R
+# Para verificar apenas as primeiras linhas
+head (meu_dataframe)
+
+# Para verificar as linhas finais
+tail (meu_dataframe)
+
+# Para visualizar os tipos de cada atributo
+str(meu_dataframe)
+
+# Para conhecer algumas estátiscas básicas do arquivo
+summary(meu_dataframe)
+
+
+```
+
+
+### Leitura e análise do reddit.csv
+
+```R
+
+# Lembre-se do diretório
+arquivo <- read.csv ('reddit.csv')
+```
+
+```R
+
+library(ggplot2)
+
+# Trabalhando com dados desordenados, utilize a funcao plot()
+qplot (arquivo$age.range) # Veja que os dados estão desordenados do plot, dificultando a analise do plot
+
+# Para ver os levels utilize o comando levels()
+levels(arquivo$age.range)
+
+# Lembrando que estamos trabalhando com a classe factor, uma classe que possui diferentes tipos de dados
+# Ordenando os ranges de idades utilizando o comando ordered e pegando as levels da colunas
+arquivoIdade <- ordered(arquivo$age.range,levels=c("Under 18", "18-24", "25-34", "35-44", "45-54", "55-64", "65 or Above"))
+
+# Observe a diferença na analise após a ordenação dos dados
+qplot(arquivoIdade)
+
+
+
+```
+
+## Para realizar leitura de dados com formatos estranhos, recomendo esse [artigo](http://flowingdata.com/2015/02/18/loading-data-and-basic-formatting-in-r/)
+
+### Leitura e analise do pseudo_facebook.tsv
+
+```R
+
+# Leitura do arquivo separado por tabulações
+arquivo <- read.csv("pseudo_facebook.tsv",sep = '\t')
+
+# Outra maneira de ler o arquivo
+arquivo <- read.delim ("pseudo_facebook.tsv")
+
+
+```
