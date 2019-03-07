@@ -3,7 +3,7 @@
 ## Atribuição de variável
 
 ```{r}
-# Hadley prefere atribuições utilizando ceta <-  
+# Hadley prefere atribuições utilizando seta <-  
 a <- 42
 b = 21
 11.5 -> c
@@ -211,10 +211,6 @@ ggplot(mtcars, aes(x = mpg, y = wt)) +
 
 ```
 
-
-
-
-
 ## Solucões dos desafios 
 Desafio da conversão libras para quilos, lembrando que está em escala milhar
 ```{r}
@@ -229,8 +225,6 @@ Desafio da conversão libras para quilos, lembrando que está em escala milhar
   
   round(mtcars$wt, 3)
 ```
-
-
 
 # Leitura e análise de dados utilizando o pacote tidyverse
 
